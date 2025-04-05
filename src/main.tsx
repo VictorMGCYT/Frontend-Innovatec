@@ -1,15 +1,17 @@
 
 import { createRoot } from 'react-dom/client'
 import './index.css'
-import { BrowserRouter, Route, Routes } from "react-router";
-import Login from './routes/Login/Login.tsx'
+import { BrowserRouter} from "react-router";
+import { Toaster } from 'sonner';
+import App from './App.tsx';
 
+// TODO agregar la ruta del register
 createRoot(document.getElementById('root')!).render(
-  <BrowserRouter>
-
-    <Routes>
-      <Route path='/Login' element={<Login/>}></Route>
-    </Routes>
-
+  <>
+   <BrowserRouter>
+    <Toaster richColors />
+    <App />
   </BrowserRouter>
+  </>
+  
 )
