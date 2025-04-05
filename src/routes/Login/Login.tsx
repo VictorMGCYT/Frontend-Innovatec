@@ -6,6 +6,7 @@ import { useNavigate } from 'react-router'
 import { Link } from 'react-router'
 import axios from 'axios';
 import { toast } from "sonner";
+import validatePassword from '@/common/validatePassword/validate-password'
 
 function Login() {
   const [email, setEmail] = useState('');
@@ -16,30 +17,8 @@ function Login() {
   const handleLogin = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault()
     
-    if (password.length < 6) {
-      toast.error("Error", {
-        description: "La contraseñá debe tener al menos 6 carcteres",
-      });
-      throw new Error("Password must be contained at least 6 characteres");
-    }
-    if (!/[a-z]/.test(password)) {
-      toast.error("Error", {
-        description: "La contraseñá debe tener al menos 1 minúscula",
-      });
-      throw new Error("Password must contain at least one lowercase letter.");
-    }
-    if (!/[A-Z]/.test(password)) {
-      toast.error("Error", {
-        description: "La contraseñá debe tener al menos 1 mayúscula",
-      });
-      throw new Error("Password must contain at least one uppercase letter.");
-    }
-    if (!/\d/.test(password)) {
-      toast.error("Error", {
-        description: "La contraseñá debe tener al menos 1 número",
-      });
-      throw new Error("Password must contain at least one number.");
-    }
+    // Función ubicada en la carpeta commons
+    validatePassword(password)
 
 
     // Lógica de autenticación
@@ -102,7 +81,6 @@ function Login() {
                   Contraseña:
                 </Label>
                 <Input
-                  minLength={6}
                   required
                   className="border-slate-300 focus:border-amber-500 focus:ring-amber-500"
                   type="password"
@@ -123,8 +101,11 @@ function Login() {
                 {/* <Link href="#" className="text-sm text-amber-600 hover:text-amber-700">
                   ¿Olvidaste tu contraseña?
                 </Link> */}
-                <Link to='/Register' className="text-sm text-amber-600 hover:text-amber-700">
-                  ¿No tienes cuenta? Registrate
+                <Link to='/register-student' className="text-sm text-amber-600 hover:text-amber-700">
+                  ¿Eres estudiante y no tienes cuenta? Registrate
+                </Link>
+                <Link to='/register-company' className="text-sm text-amber-600 hover:text-amber-700">
+                  ¿Eres una empresa y no tienes cuenta? Registrate
                 </Link>
               </div>
             </form>

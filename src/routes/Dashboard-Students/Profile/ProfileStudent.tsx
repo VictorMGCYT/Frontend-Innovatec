@@ -2,7 +2,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import StudentInterface from "@/interfaces/student/student.interface";
-import { Hammer, Languages, Lightbulb, Mail, Phone } from "lucide-react";
+import { Hammer, Languages, Lightbulb, Mail, Phone, Search } from "lucide-react";
 import { useEffect, useState } from "react";
 import axios from 'axios';
 import { useNavigate } from "react-router";
@@ -32,7 +32,6 @@ function ProfileStudent() {
                 const response = await axios.get(`${urlEnv}students/get/${userEmail}`);
                 
                 setStudent(response.data);
-                console.log(response.data);
 
             } catch (error) {
                 // TODO cambiar por una pagina 403 o regresar al login
@@ -53,7 +52,6 @@ function ProfileStudent() {
 
 
         setSkills(student?.skills ?? [])
-
         setLanguages(student?.languages ?? [])
 
     }, [student])
@@ -105,19 +103,31 @@ function ProfileStudent() {
                             asChild>
                             <Button variant="outline">Ver CV</Button>
                         </DialogTrigger>
-                        <DialogContent className="sm:max-w-[1025px] sm:w-[90%]">
+                        <DialogContent 
+                        className={ 
+                            !student?.cv_url ? "sm:max-w-[525px] sm:w-[90%]"
+                            :  "sm:max-w-[1025px] sm:w-[90%]"}>
                             <DialogHeader>
                                 <DialogTitle>Curriculum Vitae</DialogTitle>
                             </DialogHeader>
-                            
-                            <iframe
+                            {
+                                !student?.cv_url ?
+                                <div className="flex flex-col items-center">
+                                    <Search className="h-20 w-20 text-slate-300" strokeWidth={1.5} />
+                                    <h3 className="w-[50%] text-center text-gray-500">
+                                        No se ha encongtrado un CV cargado en tu perfil
+                                    </h3>
+                                </div>
+                                :
+                                <iframe
                                 className="max-h-[80vh]"
                                 src={student?.cv_url}
                                 width="100%"  
                                 height="600px" 
                                 style={{ border: 'none' }}
                                 title="PDF Viewer"
-                            />
+                                />
+                            }
                         </DialogContent>
                         </Dialog>
                     </CardFooter>

@@ -15,11 +15,6 @@ import { FileText, LayoutDashboard, LogOut, Settings, User, UserCog } from "luci
 // Menu items.
 const items = [
     {
-      title: "Dashboard",
-      url: "#",
-      icon: LayoutDashboard,
-    },
-    {
       title: "Mi Perfil",
       url: "#",
       icon: User,
@@ -35,7 +30,12 @@ const items = [
       icon: FileText,
     },
     {
-      title: "Contifuración",
+      title: "Dashboard",
+      url: "#",
+      icon: LayoutDashboard,
+    },
+    {
+      title: "Configuración",
       url: "#",
       icon: Settings,
     },
