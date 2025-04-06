@@ -11,17 +11,18 @@ import {
     SidebarMenuItem,
   } from "@/components/ui/sidebar"
 import { FileText, LayoutDashboard, LogOut, Settings, User, UserCog } from "lucide-react"
+import { Link } from "react-router"
 
 // Menu items.
 const items = [
     {
       title: "Mi Perfil",
-      url: "#",
+      url: "/dashboard-student/profile",
       icon: User,
     },
     {
       title: "Editar Perfil",
-      url: "#",
+      url: "/dashboard-student/edit-profile",
       icon: UserCog,
     },
     {
@@ -58,10 +59,10 @@ return (
                     {items.map((item) => (
                         <SidebarMenuItem key={item.title}>
                         <SidebarMenuButton asChild>
-                            <a href={item.url}>
-                            <item.icon />
-                            <span>{item.title}</span>
-                            </a>
+                            <Link to={item.url}>
+                              <item.icon />
+                              <span>{item.title}</span>
+                            </Link>
                         </SidebarMenuButton>
                         </SidebarMenuItem>
                     ))}

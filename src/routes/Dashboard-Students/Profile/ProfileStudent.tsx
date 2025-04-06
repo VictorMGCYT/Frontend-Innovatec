@@ -69,7 +69,7 @@ function ProfileStudent() {
                         Visualiza y gestiona tu información personal y profesional
                     </p>
                 </div>
-                <Button 
+                <Button onClick={() => navigate('/dashboard-student/edit-profile')}
                     className="bg-amber-500 mr-auto ml-auto w-full md:ml-auto md:w-[50%] md:mr-0 hover:bg-amber-600 hover:cursor-pointer">
                     Editar Perfil
                 </Button>

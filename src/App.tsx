@@ -11,9 +11,11 @@ import ProtectRoutes from "./ProtectRoutes";
 import { useEffect, useState } from "react";
 import axios from 'axios';
 import StudentInterface from "./interfaces/student/student.interface";
+import EditProfileStudent from "./routes/Dashboard-Students/Edit-Profile/EditProfileStudent";
+import { useTheme } from "./hooks/useTheme";
 
 function Layout() {
-  
+  const { theme, setTheme } = useTheme();
   const [student, setStudent] = useState<StudentInterface>();
   // const [company, setCompany] = useState<any>();
   const navigate = useNavigate();
@@ -54,32 +56,47 @@ function Layout() {
 
   return (
     <SidebarProvider>
-                <AppSidebar />
-                <main className='w-full'>
-                    <SidebarTrigger className='flex sticky top-0 h-[60px] rounded-[0] border-b border-b-gray-200 z-10'/>
-                    {/* Todo el content que no pertenezca al sidebar */}
-                    <Outlet /> {/* Aquí se renderizan las rutas hijas */}
-                </main>
-                <div 
-                className='flex items-center justify-end right-4 
-                fixed top-0 h-[60px] w-full border-b border-b-gray-200 gap-4 bg-white'>
-                    {/* <Bell size={20}/> */}
-                    <Avatar>
-                        <AvatarImage></AvatarImage>
-                        <AvatarFallback className='bg-amber-100 p-2 rounded-full'>
-                            {`${student?.paternalSurname[0].toLocaleUpperCase()}${student?.paternalSurname[1].toLocaleUpperCase()}`}
-                        </AvatarFallback>
-                    </Avatar>
-                    <h3 className='font-medium'>
-                        {student?.paternalSurname.replace(/\b\w/g, char => char.toUpperCase())}
-                    </h3>
-                </div>
-            </SidebarProvider>
+      <AppSidebar />
+      <main className='w-full'>
+          <SidebarTrigger className='flex sticky top-0 h-[60px] rounded-[0] border-b border-b-gray-200 z-10'/>
+          {/* Todo el content que no pertenezca al sidebar */}
+          <Outlet /> {/* Aquí se renderizan las rutas hijas */}
+      </main>
+      <div 
+      className='flex items-center justify-end right-4 
+      fixed top-0 h-[60px] w-full border-b border-b-gray-200 gap-4 bg-white
+      dark:bg-neutral-950'>
+          {/* <Bell size={20}/> */}
+          <button
+            className="px-4 text-sm py-2 bg-gray-200 dark:bg-gray-800 dark:text-white rounded"
+            onClick={() => setTheme(theme === "dark" ? "light" : "dark")}>
+            {theme === "dark" ? "Light Mode" : "Dark Mode"}
+          </button>
+          <Avatar>
+              <AvatarImage></AvatarImage>
+              <AvatarFallback className='bg-amber-100 p-2 rounded-full dark:text-black'>
+                  {`${student?.paternalSurname[0].toLocaleUpperCase()}${student?.paternalSurname[1].toLocaleUpperCase()}`}
+              </AvatarFallback>
+          </Avatar>
+          <h3 className='font-medium'>
+              {student?.paternalSurname.replace(/\b\w/g, char => char.toUpperCase())}
+          </h3>
+      </div>
+    </SidebarProvider>
 
   );
 }
 
 function App() {
+  const { theme } = useTheme();
+
+  useEffect(() => {
+    if (theme === "dark") {
+      document.documentElement.classList.add("dark");
+    } else {
+      document.documentElement.classList.remove("dark");
+    }
+  }, [theme]);
   return (
     <Routes>
       {/* Rutas con Layout */}
@@ -87,6 +104,7 @@ function App() {
         <Route index element={<div>Página de inicio</div>} />
         <Route path="dashboard-student" element={<div>Dashboard</div>} />
         <Route path="dashboard-student/profile" element={<ProtectRoutes role="student"><ProfileStudent/></ProtectRoutes>}></Route>
+        <Route path="dashboard-student/edit-profile" element={<ProtectRoutes role="student"><EditProfileStudent/></ProtectRoutes>}></Route>
       </Route>
 
       {/* Rutas sin Layout */}

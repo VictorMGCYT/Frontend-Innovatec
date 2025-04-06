@@ -6,7 +6,8 @@ function NotFound() {
     
     return (
         <>
-         <div className="min-h-screen flex flex-col items-center justify-center bg-gray-50 p-4">
+         <div className="min-h-screen flex flex-col 
+              items-center justify-center bg-gray-50 p-4 dark:bg-neutral-900">
             <div className="w-full max-w-md text-center">
               <div className="mb-6">
                 <div className="text-amber-500 font-bold text-9xl">404</div>
@@ -22,7 +23,9 @@ function NotFound() {
                 </div>
               </div>
 
-              <h1 className="text-3xl font-bold text-slate-800 mb-2">Página no encontrada</h1>
+              <h1 className="text-3xl font-bold text-slate-800 mb-2 dark:text-white">
+                Página no encontrada
+              </h1>
               <p className="text-slate-600 mb-8">Lo sentimos, la página que estás buscando no existe o ha sido movida.</p>
 
               <div className="flex flex-col sm:flex-row gap-4 justify-center">

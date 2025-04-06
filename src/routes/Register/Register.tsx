@@ -7,8 +7,8 @@ import { Input } from "@/components/ui/input";
 import { useState } from "react";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { toast } from "sonner";
-import validatePassword from "@/common/validatePassword/validate-password";
 import axios from 'axios';
+import validateFormData from "@/utils/validations/validate-register";
 
 
 const CARRERAS = [
@@ -46,20 +46,8 @@ export default function Register(){
     try {
 
       setLoading(true);
-      // Validación de la contraseña
-      validatePassword(formData.password)
-      if(formData.password !== formData.confirmPassword ){
-        toast.error("Error", {
-          description: "Las contraseñas no coinciden",
-        });
-        throw new Error("Password and Confirm Password doesn't match");
-      }
-      if(!formData.carrera ){
-        toast.error("Error", {
-          description: "La carrera es requerida",
-        });
-        throw new Error("Career is required");
-      }
+      // Validación todos los datos del formulario
+      validateFormData(formData)
 
       // Solicitud a la api para realizar el registro
       await axios.post(`${urlEnv}students/create`,{
@@ -76,41 +64,43 @@ export default function Register(){
       navigate('/Login')
 
     } catch (error) {
+      setLoading(false);
       if (axios.isAxiosError(error)) {
-        const errorMessage = error.response?.data.message;
-        if(errorMessage.startsWith('Key (email)')){
+        const errorMessage: string = error.response?.data.message;
+        console.log(errorMessage);
+        if(errorMessage.includes('Key (email)')){
           toast.error("Error", {
             description: "El correo ya se encuentra registrado"
           })
         }
-        if(errorMessage.startsWith('Key (phone_number)')){
+        if(errorMessage.includes('Key (phone_number)')){
           toast.error("Error", {
-            description: "El correo ya se encuentra registrado"
+            description: "El número de teléfono ya se encuentra registrado"
           })
-          setLoading(false);
         }
 
       } else {
         console.log("Unexpected error");
-        setLoading(false);
       }
     }
   }
     
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center bg-gray-50 p-4">
+    <div className="min-h-screen flex flex-col items-center justify-center 
+      bg-gray-50 p-4 dark:bg-neutral-900">
     <div className="w-full max-w-3xl flex flex-col items-center">
-        <Card className="w-full bg-white shadow-xl rounded-tl-2xl rounded-tr-xl mt-5">
+        <Card className="w-full bg-white shadow-xl rounded-tl-2xl 
+          rounded-tr-xl mt-5 dark:bg-neutral-900">
           <CardHeader className="bg-amber-500 text-white h-[90px] mt-[-35px] rounded-tl-2xl  rounded-tr-2xl">
             <div className="flex items-center mt-4">
               <Link to="/Login" className="mr-4">
                 <Button variant="ghost" size="icon" className="text-white hover:text-slate-100">
-                  <ChevronLeft className="h-5 w-5" />
+                  <ChevronLeft className="h-5 w-5 dark:stroke-black" />
                 </Button>
               </Link>
               <div>
-                <CardTitle className="text-2xl">Registro de Usuario</CardTitle>
-                <CardDescription className="text-white text-opacity-80">
+                <CardTitle className="text-2xl dark:text-black">Registro de Usuario</CardTitle>
+                <CardDescription className="text-white dark:text-black">
                   Completa el formulario para crear tu cuenta
                 </CardDescription>
               </div>
@@ -129,7 +119,6 @@ export default function Register(){
                     placeholder="Nombre"
                     value={formData.nombre}
                     onChange={handleInputChange}
-                    required
                     minLength={3}
                     maxLength={40}
                     className="border-slate-300 focus:border-amber-500 focus:ring-amber-500"
@@ -144,7 +133,6 @@ export default function Register(){
                     placeholder="Apellido Paterno"
                     value={formData.apellidopaterno}
                     onChange={handleInputChange}
-                    required
                     minLength={3}
                     maxLength={20}
                     className="border-slate-300 focus:border-amber-500 focus:ring-amber-500"
@@ -159,7 +147,6 @@ export default function Register(){
                     placeholder="Apellido Materno"
                     value={formData.apellidomaterno}
                     onChange={handleInputChange}
-                    required
                     minLength={3}
                     maxLength={20}
                     className="border-slate-300 focus:border-amber-500 focus:ring-amber-500"
@@ -175,7 +162,6 @@ export default function Register(){
                     placeholder="correo@ejemplo.com"
                     value={formData.email}
                     onChange={handleInputChange}
-                    required
                     maxLength={65}
                     className="border-slate-300 focus:border-amber-500 focus:ring-amber-500"
                   />
@@ -192,7 +178,6 @@ export default function Register(){
                     placeholder="123 456 7890"
                     value={formData.telefono}
                     onChange={handleInputChange}
-                    required
                     className="border-slate-300 focus:border-amber-500 focus:ring-amber-500"
                   />
                 </div>
@@ -206,7 +191,6 @@ export default function Register(){
                     placeholder="Contraseña"
                     value={formData.password}
                     onChange={handleInputChange}
-                    required
                     maxLength={40}
                     className="border-slate-300 focus:border-amber-500 focus:ring-amber-500"
                   />
@@ -221,7 +205,6 @@ export default function Register(){
                     placeholder="Confirmar contraseña"
                     value={formData.confirmPassword}
                     onChange={handleInputChange}
-                    required
                     className="border-slate-300 focus:border-amber-500 focus:ring-amber-500"
                   />
                 </div>
@@ -231,7 +214,6 @@ export default function Register(){
                   <Select
                     onValueChange={(value) => setFormData((prev) => ({ ...prev, carrera: value }))}
                     value={formData.carrera}
-                    required
                   >
                     <SelectTrigger className="border-slate-300 focus:border-amber-500 focus:ring-amber-500">
                       <SelectValue placeholder="Selecciona tu carrera" />
@@ -250,7 +232,7 @@ export default function Register(){
               <Button 
               disabled={loading}
                 type="submit" 
-                className="w-full bg-amber-500 hover:bg-amber-600 text-white">
+                className="w-full bg-amber-500 hover:bg-amber-600">
                 {loading === false ? "Registrarse" : "Registrando..."}
                 
               </Button>
@@ -259,7 +241,7 @@ export default function Register(){
             </form>
           </CardContent>
 
-          <CardFooter className="flex flex-col space-y-4 bg-slate-50 p-6">
+          <CardFooter className="flex flex-col space-y-4 bg-slate-50 p-6 dark:bg-neutral-950  ">
 
             <p className="text-center text-sm text-slate-600">
               ¿Ya tienes una cuenta?{" "}

@@ -6,11 +6,12 @@ import { useNavigate } from 'react-router'
 import { Link } from 'react-router'
 import axios from 'axios';
 import { toast } from "sonner";
-import validatePassword from '@/common/validatePassword/validate-password'
+import validatePassword from '@/utils/validations/validate-password'
 
 function Login() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
   const urlEnv = import.meta.env.VITE_API_REST_INNOVATEC ?? `http://localhost:3001/api/`
 
@@ -19,14 +20,17 @@ function Login() {
     
     // Función ubicada en la carpeta commons
     validatePassword(password)
+    setLoading(true);
 
 
     // Lógica de autenticación
     try {
       const response = await axios.post(`${urlEnv}auth/login`, {
-        "email": email,
+        "email": email.toLowerCase().trim(),
         "password": password
       });
+
+      setLoading(false);
 
       const data = response.data;
       // TODO guardar el token
@@ -49,21 +53,28 @@ function Login() {
       toast.error("Error", {
         description: "Correo o contraseña incorrectos",
       });
+      setLoading(false);
     }
   }
 
   return (
     <>
-      <div className="min-h-screen flex flex-col items-center justify-center bg-gray-50 p-4">
+      <div className="min-h-screen flex flex-col items-center 
+        justify-center bg-gray-50 p-4 dark:bg-neutral-900">
       <div className="w-full max-w-md flex flex-col items-center">
 
-        <div className="w-full bg-white rounded-lg shadow-[10px_10px_30px_rgba(0,0,0,0.6)] overflow-hidden ">
+        <div 
+          className="w-full bg-white rounded-lg shadow-[10px_10px_30px_rgba(0,0,0,0.6)] 
+          overflow-hidden dark:bg-neutral-900">
           <div className="p-8">
-            <h1 className="text-3xl font-bold text-center text-slate-800 mb-6">Iniciar Sesión</h1>
+            <h1 
+              className="text-3xl font-bold text-center text-slate-800 mb-6 dark:text-white">
+              Iniciar Sesión
+            </h1>
 
             <form onSubmit={handleLogin} className='space-y-4'>
               <div className="space-y-2">
-                <Label htmlFor="email" className="text-slate-700">
+                <Label htmlFor="email" className="text-slate-700 dark:text-gray-400">
                   Email:
                 </Label>
                 <Input
@@ -77,12 +88,12 @@ function Login() {
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="password" className="text-slate-700">
+                <Label htmlFor="password" className="text-slate-700 dark:text-gray-400">
                   Contraseña:
                 </Label>
                 <Input
                   required
-                  className="border-slate-300 focus:border-amber-500 focus:ring-amber-500"
+                  className="border-slate-300 focus:border-amber-500 focus:ring-amber-500 "
                   type="password"
                   id="password"
                   placeholder="Contraseña"
@@ -91,27 +102,28 @@ function Login() {
               </div>
 
               <Button 
+              disabled={loading}
               type='submit'
               className="w-full hover:cursor-pointer bg-amber-500 hover:bg-amber-600"
               variant={'default'}>
-                Ingresar
+                { loading ? "Iniciando Sesión..." : "Ingresar" }
               </Button>
 
               <div className="flex flex-col text-center gap-2">
                 {/* <Link href="#" className="text-sm text-amber-600 hover:text-amber-700">
                   ¿Olvidaste tu contraseña?
                 </Link> */}
-                <Link to='/register-student' className="text-sm text-amber-600 hover:text-amber-700">
+                <Link to='/register-student' className="text-xs text-amber-600 hover:text-amber-700">
                   ¿Eres estudiante y no tienes cuenta? Registrate
                 </Link>
-                <Link to='/register-company' className="text-sm text-amber-600 hover:text-amber-700">
+                <Link to='/register-company' className="text-xs text-amber-600 hover:text-amber-700">
                   ¿Eres una empresa y no tienes cuenta? Registrate
                 </Link>
               </div>
             </form>
           </div>
 
-          <div className="bg-slate-100 p-4">
+          <div className="bg-slate-100 p-4 dark:bg-neutral-950">
             <p className="text-center text-slate-600 text-sm">
               © {new Date().getFullYear()} Yes Owl. Todos los derechos reservados, los izquierdos también.
             </p>
