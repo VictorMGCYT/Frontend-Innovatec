@@ -37,7 +37,11 @@ function Layout() {
             // TODO completar para los datos de las compañias
           }else{
             try {
-              const response = await axios.get(`${urlEnv}students/get/${userEmail}`);
+              const response = await axios.get(`${urlEnv}students/get/${userEmail}`, {
+                headers: {
+                    Authorization: `Bearer ${token}`  // Aquí se envía el token en el header
+                }
+              });
               
               setStudent(response.data);
 

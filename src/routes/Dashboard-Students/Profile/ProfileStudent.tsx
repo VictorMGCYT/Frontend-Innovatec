@@ -29,13 +29,27 @@ function ProfileStudent() {
             const userEmail = payload.email;
 
             try {
-                const response = await axios.get(`${urlEnv}students/get/${userEmail}`);
+                const response = await axios.get(`${urlEnv}students/get/${userEmail}`, {
+                    headers: {
+                        Authorization: `Bearer ${token}`  // Aquí se envía el token en el header
+                    }
+                });
                 
                 setStudent(response.data);
 
             } catch (error) {
-                // TODO cambiar por una pagina 403 o regresar al login
-                console.log(error);
+                if (axios.isAxiosError(error)){
+                    if (error.response && error.response.status === 401) {
+                        // Token expirado o inválido
+                        sessionStorage.removeItem("token"); // Elimina el token
+                        navigate("/Login"); // Redirige al login
+                    } else {
+                        console.log(error); // Manejo de otros errores
+                    }
+                }else {
+                    console.log("Unexpected error");
+                }
+                
             }
 
         };
