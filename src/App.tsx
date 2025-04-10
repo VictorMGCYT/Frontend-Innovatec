@@ -13,6 +13,7 @@ import axios from 'axios';
 import StudentInterface from "./interfaces/student/student.interface";
 import EditProfileStudent from "./routes/Dashboard-Students/Edit-Profile/EditProfileStudent";
 import { useTheme } from "./hooks/useTheme";
+import SettingsStudents from "./routes/Dashboard-Students/Settings/SettingsStudent";
 
 function Layout() {
   const { theme, setTheme } = useTheme();
@@ -109,6 +110,7 @@ function App() {
         <Route path="dashboard-student" element={<div>Dashboard</div>} />
         <Route path="dashboard-student/profile" element={<ProtectRoutes role="student"><ProfileStudent/></ProtectRoutes>}></Route>
         <Route path="dashboard-student/edit-profile" element={<ProtectRoutes role="student"><EditProfileStudent/></ProtectRoutes>}></Route>
+        <Route path="dashboard-student/settings" element={<ProtectRoutes role="student"><SettingsStudents/></ProtectRoutes>}></Route>
       </Route>
 
       {/* Rutas sin Layout */}

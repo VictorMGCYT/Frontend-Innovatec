@@ -37,7 +37,7 @@ const items = [
     },
     {
       title: "Configuración",
-      url: "#",
+      url: "/dashboard-student/settings",
       icon: Settings,
     },
   ]

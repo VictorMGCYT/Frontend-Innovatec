@@ -9,15 +9,8 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { toast } from "sonner";
 import axios from 'axios';
 import validateFormData from "@/utils/validations/validate-register";
+import { CARRERAS } from "@/utils/global-variables/careers";
 
-
-const CARRERAS = [
-  "Ingeniería en Sistemas Computacionales",
-  "Ingeniería Informática",
-  "Ingeniería en Gestión Empresarial",
-  "Ingeniería en Logistica",
-]
-  
 
 export default function Register(){
   const navigate = useNavigate();
@@ -112,7 +105,7 @@ export default function Register(){
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 {/* Información personal */}
                 <div className="space-y-2">
-                  <Label htmlFor="nombre">Nombre</Label>
+                  <Label htmlFor="nombre">Nombres</Label>
                   <Input
                     id="nombre"
                     name="nombre"

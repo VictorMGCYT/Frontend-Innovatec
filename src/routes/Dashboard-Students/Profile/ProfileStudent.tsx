@@ -113,9 +113,15 @@ function ProfileStudent() {
                     <CardFooter className="flex justify-between">
                     <Dialog>
                         <DialogTrigger 
-                            className="w-full text-white bg-amber-500 hover:bg-amber-600 hover:text-white" 
+                            className="w-full text-white bg-amber-500 hover:bg-amber-600 
+                            hover:text-white hover:cursor-pointer" 
                             asChild>
-                            <Button variant="outline">Ver CV</Button>
+                            <Button 
+                                className="dark:bg-amber-500 dark:hover:bg-amber-600 
+                                dark:text-black hover:cursor-pointer" 
+                                variant="outline">
+                                Ver CV
+                            </Button>
                         </DialogTrigger>
                         <DialogContent 
                         className={ 
