@@ -4,6 +4,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { useStudent } from "@/hooks/useStudent";
 import { CARRERAS } from "@/utils/global-variables/careers";
 import validatePersonalInfo from "@/utils/validations/validate-personal-info";
 import { Save } from "lucide-react";
@@ -14,6 +15,7 @@ import React, { useState } from "react";
 
 
 function EditProfileStudent() {
+    const student = useStudent();
 
     const [dataForm, setDataForm] = useState({
         firstName: "",

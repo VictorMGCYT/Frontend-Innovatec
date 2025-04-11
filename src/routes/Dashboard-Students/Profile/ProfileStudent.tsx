@@ -1,62 +1,21 @@
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
-import StudentInterface from "@/interfaces/student/student.interface";
 import { Hammer, Languages, Lightbulb, Mail, Phone, Search } from "lucide-react";
 import { useEffect, useState } from "react";
-import axios from 'axios';
 import { useNavigate } from "react-router";
+import { useStudent } from "@/hooks/useStudent";
 
 
 function ProfileStudent() {
 
-    const [student, setStudent] = useState<StudentInterface>();
+    const student = useStudent(); // Aquí se obtiene el estudiante desde el hooks
     const [fullName, setFullName] = useState<string>("");
     const [skills, setSkills] = useState<string[]>([]);
     const [languages, setLanguages] = useState<string[]>([]);
-    const urlEnv = import.meta.env.VITE_API_REST_INNOVATEC ?? `http://localhost:3001/api/`;
     const navigate = useNavigate();
 
-    useEffect(() => {
-        async function getStudentById() {
-            
-            const token = sessionStorage.getItem('token');
-            if(!token){
-                return navigate('/Login');
-            }
-
-            const payload = JSON.parse(atob(token.split(".")[1]));  
-            const userEmail = payload.email;
-
-            try {
-                const response = await axios.get(`${urlEnv}students/get/${userEmail}`, {
-                    headers: {
-                        Authorization: `Bearer ${token}`  // Aquí se envía el token en el header
-                    }
-                });
-                
-                setStudent(response.data);
-
-            } catch (error) {
-                if (axios.isAxiosError(error)){
-                    if (error.response && error.response.status === 401) {
-                        // Token expirado o inválido
-                        sessionStorage.removeItem("token"); // Elimina el token
-                        navigate("/Login"); // Redirige al login
-                    } else {
-                        console.log(error); // Manejo de otros errores
-                    }
-                }else {
-                    console.log("Unexpected error");
-                }
-                
-            }
-
-        };
-
-        getStudentById();
-    }, [])
-
+    
     useEffect(() => {
 
         setFullName(
