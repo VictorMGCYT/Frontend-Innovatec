@@ -5,6 +5,7 @@ import { Hammer, Languages, Lightbulb, Mail, Phone, Search } from "lucide-react"
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router";
 import { useStudent } from "@/hooks/useStudent";
+import { capitalizeWords } from "@/utils/global-functions/capitalize-words";
 
 
 function ProfileStudent() {
@@ -19,9 +20,9 @@ function ProfileStudent() {
     useEffect(() => {
 
         setFullName(
-            `${student?.firstName.replace(/\b\w/g, char => char.toUpperCase())} 
-            ${student?.paternalSurname.replace(/\b\w/g, char => char.toUpperCase())} 
-            ${student?.maternalSurname.replace(/\b\w/g, char => char.toUpperCase())}`);
+            `${capitalizeWords(student?.firstName)} 
+            ${capitalizeWords(student?.paternalSurname)} 
+            ${capitalizeWords(student?.maternalSurname)}`);
 
 
         setSkills(student?.skills ?? [])
@@ -64,7 +65,7 @@ function ProfileStudent() {
                                 <Phone/> {`+52 ${student?.phone_number}`}
                             </li>
                             <li className="flex gap-4">
-                                <Hammer/> {`Ing. ${student?.career}`}
+                                <Hammer/> {`${student?.career.replace(/\b\w/, char => char.toUpperCase())}`}
                             </li>
                         </ul>
                         

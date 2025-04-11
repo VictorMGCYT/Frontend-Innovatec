@@ -5,6 +5,7 @@ import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useStudent } from "@/hooks/useStudent";
+import { capitalizeWords } from "@/utils/global-functions/capitalize-words";
 import { CARRERAS } from "@/utils/global-variables/careers";
 import validatePersonalInfo from "@/utils/validations/validate-personal-info";
 import { Save } from "lucide-react";
@@ -26,7 +27,11 @@ function EditProfileStudent() {
         career: ""
     })
 
-   
+    // función para normalizar la carrera que viene de la base de datos en minúsculas
+    // y compararla con las carreras definidas en el array CARRERAS
+    const normalizeCareer = (career: string | undefined) => {
+        return CARRERAS.find(c => c.toLowerCase() === career?.toLowerCase()) || "";
+    };
 
     function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
         e.preventDefault();
@@ -88,7 +93,7 @@ function EditProfileStudent() {
                                                         firstName: e.target.value})
                                                     )
                                                 )}
-                                                value={dataForm.firstName}
+                                                value={capitalizeWords(student?.firstName)}
                                                 minLength={3}
                                                 maxLength={40}
                                                 className="border-slate-300 focus:border-amber-500 focus:ring-amber-500"
@@ -106,7 +111,7 @@ function EditProfileStudent() {
                                                         paternalSurname: e.target.value})
                                                     )
                                                 )}
-                                                value={dataForm.paternalSurname}
+                                                value={capitalizeWords(student?.paternalSurname)}
                                                 minLength={3}
                                                 maxLength={20}
                                                 className="border-slate-300 focus:border-amber-500 focus:ring-amber-500"
@@ -125,7 +130,7 @@ function EditProfileStudent() {
                                                         maternalSurname: e.target.value})
                                                     )
                                                 )}
-                                                value={dataForm.maternalSurname}
+                                                value={capitalizeWords(student?.maternalSurname)}
                                                 minLength={3}
                                                 maxLength={20}
                                                 className="border-slate-300 focus:border-amber-500 focus:ring-amber-500"
@@ -145,7 +150,7 @@ function EditProfileStudent() {
                                                         email: e.target.value})
                                                     )
                                                 )}
-                                                value={dataForm.email}
+                                                value={student?.contact_email}
                                                 maxLength={65}
                                                 className="border-slate-300 focus:border-amber-500 focus:ring-amber-500"
                                             />
@@ -166,18 +171,18 @@ function EditProfileStudent() {
                                                         phone: e.target.value})
                                                     )
                                                 )}
-                                                value={dataForm.phone}
+                                                value={student?.phone_number}
                                                 className="border-slate-300 focus:border-amber-500 focus:ring-amber-500"
                                             />
                                         </div>
                                         <div className="space-y-2">
                                             <Label >Carrera</Label>
                                             <Select
-                                                value={dataForm.career}
+                                                value={normalizeCareer(student?.career)}
                                                 onValueChange={(value) => setDataForm((prev) => ({ ...prev, career: value }))}
                                             >
                                                 <SelectTrigger className="border-slate-300 focus:border-amber-500 focus:ring-amber-500">
-                                                <SelectValue  placeholder="Selecciona tu carrera" />
+                                                <SelectValue placeholder="Selecciona tu carrera" />
                                                 </SelectTrigger>
                                                 <SelectContent>
                                                 {CARRERAS.map((carrera) => (

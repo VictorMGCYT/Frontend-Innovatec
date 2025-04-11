@@ -41,6 +41,7 @@ export function useStudent(){
                     }
                 }else {
                     console.log("Unexpected error");
+                    navigate("/Login");
                 }
                 
             }
