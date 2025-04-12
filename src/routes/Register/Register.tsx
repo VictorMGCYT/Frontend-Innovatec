@@ -53,11 +53,11 @@ export default function Register(){
         password: formData.password
       })
 
-      setLoading(false);
+      
       navigate('/Login')
 
     } catch (error) {
-      setLoading(false);
+      
       if (axios.isAxiosError(error)) {
         const errorMessage: string = error.response?.data.message;
         console.log(errorMessage);
@@ -75,6 +75,9 @@ export default function Register(){
       } else {
         console.log("Unexpected error");
       }
+    }
+    finally{
+      setLoading(false);
     }
   }
     

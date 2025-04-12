@@ -30,7 +30,6 @@ function Login() {
         "password": password
       });
 
-      setLoading(false);
 
       const data = response.data;
       // TODO guardar el token
@@ -53,6 +52,8 @@ function Login() {
       toast.error("Error", {
         description: "Correo o contraseña incorrectos",
       });
+      
+    }finally {
       setLoading(false);
     }
   }
