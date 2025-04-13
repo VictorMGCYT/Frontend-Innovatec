@@ -8,12 +8,14 @@ import { useStudent } from "@/hooks/useStudent";
 import { capitalizeWords } from "@/utils/global-functions/capitalize-words";
 import { CARRERAS } from "@/utils/global-variables/careers";
 import validatePersonalInfo from "@/utils/validations/validate-personal-info";
-import { Loader, Loader2, Save } from "lucide-react";
+import { Loader2, Save } from "lucide-react";
 import React, { useEffect, useState } from "react";
-import { useNavigate } from "react-router";
 import { updateStudentPersonalInfo } from "./editProfile.api";
 import { toast } from "sonner";
 import WorkInProgressCard from "@/components/personal-components/WorkInProgress";
+import { Checkbox } from "@/components/ui/checkbox";
+import { SKILLS } from "@/utils/global-variables/skills";
+import { LANGUAGES } from "@/utils/global-variables/languages";
 
    
 
@@ -22,7 +24,6 @@ function EditProfileStudent() {
     const student = useStudent();
     const [loading, setLoading] = useState(false);
     const [loadingContent, setLoadingContent] = useState(true);
-    const navigate = useNavigate();
 
     // Formulario para la información personal
     const [personalDataForm, setPersonalDataForm] = useState({
@@ -111,7 +112,7 @@ function EditProfileStudent() {
                 <div></div>
             </div>
             <div className="grid place-items-center p-4 grid-cols-1 gap-4 w-full mb-8">
-                <Tabs defaultValue="personal" className="w-[90%] md:w-[80%] max-w-[900px]">
+                <Tabs defaultValue="personal" className="w-[90%] md:w-[85%] max-w-[1000px]">
                     <TabsList 
                         className="w-full h-[50px] bg-gray-200 md:h-auto 
                         dark:bg-neutral-900">  
@@ -258,17 +259,80 @@ function EditProfileStudent() {
                         </Card>
                     </TabsContent>
                     <TabsContent value="skills">
+                        <Card className="w-full mb-4">
+                            <CardHeader className=" pb-2">
+                                <CardTitle className="text-3xl">
+                                    Habilidades
+                                </CardTitle>
+                                <CardDescription>
+                                    Selecciona las habilidades que posees
+                                </CardDescription>
+                            </CardHeader>
+                            <CardContent>
+                                <form className="grid grid-cols-2 md:grid-cols-3 gap-4">
+                                    {
+                                        SKILLS.map((skill) => {
+                                            return (
+                                                <div key={skill.id} className="flex items-center space-x-2">
+                                                    <Checkbox 
+                                                    className="data-[state=checked]:bg-amber-500 
+                                                    data-[state=checked]:border-amber-500
+                                                    dark:data-[state=checked]:bg-amber-500"
+                                                    id={skill.id} />
+                                                    <label
+                                                        htmlFor="teamwork"
+                                                        className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                                                    >
+                                                        {skill.skill}
+                                                    </label>
+                                                </div>
+                                            )
+                                        })
+                                    }
+                                    <Button 
+                                        className="col-span-2 md:col-span-3 bg-amber-500 hover:bg-amber-600
+                                        hover:cursor-pointer">
+                                        Guardar Habilidades
+                                    </Button>
+                                </form>
+                            </CardContent>
+                        </Card>
                         <Card className="w-full">
                             <CardHeader className=" pb-2">
                                 <CardTitle className="text-3xl">
-                                    Habilidades e Idiomas
+                                    Idiomas
                                 </CardTitle>
                                 <CardDescription>
-                                    Actualiza tus habilidades e idiomas
+                                    Indica los idiomas que hablas
                                 </CardDescription>
                             </CardHeader>
-                            <CardContent className="pt-4">
-                                
+                            <CardContent>
+                            <form className="grid grid-cols-2 md:grid-cols-3 gap-4">
+                                    {
+                                        LANGUAGES.map((language) => {
+                                            return (
+                                                <div key={language.id} className="flex items-center space-x-2">
+                                                    <Checkbox 
+                                                    className="data-[state=checked]:bg-amber-500 
+                                                    data-[state=checked]:border-amber-500
+                                                    dark:data-[state=checked]:bg-amber-500"
+                                                    id={language.id} />
+                                                    <label
+                                                        htmlFor="teamwork"
+                                                        className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                                                    >
+                                                        {language.language}
+                                                    </label>
+                                                </div>
+                                            )
+                                        })
+                                    }
+                                    <Button 
+                                        className="col-span-2 md:col-span-3 bg-amber-500 hover:bg-amber-600
+                                        hover:cursor-pointer">
+                                        Guardar Idiomas
+                                    </Button>
+                                </form>
                             </CardContent>
                         </Card>
                     </TabsContent>
