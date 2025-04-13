@@ -1,5 +1,5 @@
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
@@ -34,6 +34,8 @@ function EditProfileStudent() {
         phone: "",
         career: ""
     })
+    const [skills, setSkills] = useState<string[]>([]);
+    const [languages, setLanguages] = useState<string[]>([]);
 
     useEffect(() => {
         if(student){
@@ -85,6 +87,10 @@ function EditProfileStudent() {
         } finally {
             setLoading(false)
         }
+    }
+
+    async function addSkill(e: any) {
+
     }
 
     return (
@@ -275,6 +281,14 @@ function EditProfileStudent() {
                                             return (
                                                 <div key={skill.id} className="flex items-center space-x-2">
                                                     <Checkbox 
+                                                    onCheckedChange={(checked) => {
+                                                        if (checked) {
+                                                            setSkills((prev) => [...prev, skill.skill]);
+                                                        } else {
+                                                            setSkills((prev) => prev.filter((s) => s !== skill.skill));
+                                                        }
+                                                    }}
+                                                    checked={skills.includes(skill.skill)}
                                                     className="data-[state=checked]:bg-amber-500 
                                                     data-[state=checked]:border-amber-500
                                                     dark:data-[state=checked]:bg-amber-500"
@@ -313,6 +327,14 @@ function EditProfileStudent() {
                                             return (
                                                 <div key={language.id} className="flex items-center space-x-2">
                                                     <Checkbox 
+                                                    onCheckedChange={(checked) => {
+                                                        if (checked) {
+                                                            setLanguages((prev) => [...prev, language.language]);
+                                                        } else {
+                                                            setLanguages((prev) => prev.filter((s) => s !== language.language));
+                                                        }
+                                                    }}
+                                                    checked={languages.includes(language.language)}
                                                     className="data-[state=checked]:bg-amber-500 
                                                     data-[state=checked]:border-amber-500
                                                     dark:data-[state=checked]:bg-amber-500"

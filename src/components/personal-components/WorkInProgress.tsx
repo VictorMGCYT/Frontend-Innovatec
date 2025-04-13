@@ -11,7 +11,7 @@ export default function WorkInProgressCard() {
         </div>
         <CardDescription>Esta funcionalidad está en desarrollo</CardDescription>
       </CardHeader>
-      <CardContent className="pt-4 bg-white">
+      <CardContent className="pt-4 bg-white dark:bg-transparent">
         <div className="flex items-start gap-3">
           <Clock className="h-5 w-5 text-amber-500 mt-0.5" />
           <div className="space-y-2">
