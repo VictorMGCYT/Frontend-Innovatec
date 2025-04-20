@@ -4,32 +4,109 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { useStudent } from "@/hooks/useStudent";
+import { capitalizeWords } from "@/utils/global-functions/capitalize-words";
+import validatePassword from "@/utils/validations/validate-password";
+import axios from "axios";
 import { AlertCircle, Mail, User } from "lucide-react";
 import { useState } from "react";
+import { useNavigate } from "react-router";
 import { toast } from "sonner";
 
-
+const API_URL = import.meta.env.VITE_API_REST_INNOVATEC ?? "http://localhost:3001/api/";
 
 function SettingsStudents() {
+    const student = useStudent();
+    const navigate = useNavigate();
+
     const [passData, setPassData] = useState({
         currentPass: "",
         newPass: "",
         confirmPass: ""
     })
     
-    function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
+    async function handleSubmitPassword(e: React.FormEvent<HTMLFormElement>) {
         e.preventDefault();
+        
+        validatePassword(passData.newPass);
 
         if( passData.newPass !== passData.confirmPass ){
             toast.error("Error", {
                 description: "Las contaseñas no coinciden",                
             })
-        }else{
-            toast("Listo!", {
-                description: "Contraseñas cambiadas correctamente"
-            })
         }
 
+        try {
+
+            const token = sessionStorage.getItem("token");
+
+            if(!token) return navigate("/Login");
+
+            const payload = JSON.parse(atob(token.split(".")[1]));
+
+            const userId = payload.id;
+
+            await axios.patch(`${API_URL}auth/update-password`, {
+                id: userId,
+                password: passData.currentPass,
+                newPassword: passData.newPass
+            },
+            {
+                headers: {
+                    Authorization: `Bearer ${token}`
+                }
+            })
+
+            toast.success("Listo!", {
+                description: "Contraseñas cambiadas correctamente"
+            })
+        } catch (error) {
+            if (axios.isAxiosError(error) && error.response) {
+                const status = error.response.status;
+    
+               if (status === 400) {
+                    toast.error("Error", {
+                        description: "Contraseña actual incorrecta",
+                    });
+                } else if (status === 500) {
+                    toast.error("Error del servidor", {
+                        description: "Intenta nuevamente más tarde.",
+                    });
+                } else {
+                    toast.error("Error", {
+                        description: `Ocurrió un error inesperado (${status}).`,
+                    });
+                }
+            } else {
+                toast.error("Error de red", {
+                    description: "No se pudo conectar con el servidor.",
+                });
+            }
+        }
+
+    }
+
+    async function deleteAccount() {
+        try {
+
+            const studentId = student?.id;
+
+            await axios.delete(`${API_URL}students/delete/${studentId}`);
+
+            toast.success("Cuenta eliminada", {
+                description: "Tu cuenta ha sido eliminada correctamente",
+            });
+            sessionStorage.removeItem("token"); // Elimina el token
+
+            setTimeout(() => {
+                navigate("/Login"); // Redirige al login	
+            }, 2000);
+            
+        } catch (error: any) {
+            toast.error("Error", {
+                description: "Error al intentar eliminar la cuenta"
+            })
+        }
     }
 
     return (
@@ -64,25 +141,28 @@ function SettingsStudents() {
                                     <div className="flex flex-col">
                                         <p className="font-medium">Nombre de usuario:</p>
                                         <span className="flex items-center gap-2">
-                                            <User size={20}/><p>Victor Manuel</p>
+                                            <User size={20}/>
+                                            <p>
+                                                {`${capitalizeWords(student?.firstName)} ${capitalizeWords(student?.paternalSurname)} ${capitalizeWords(student?.maternalSurname)}`}
+                                            </p>
                                         </span>
                                     </div>
                                     <div className="flex flex-col">
                                         <p className="font-medium">Email:</p>
                                         <span className="flex items-center gap-2">
-                                            <Mail size={20}/><p>victor@gmail.com</p>
+                                            <Mail size={20}/><p>{student?.contact_email}</p>
                                         </span>
                                     </div>
                                     <div className="flex flex-col">
                                         <p className="font-medium">Fecha de registro:</p>
                                         <span className="flex items-center gap-2">
-                                            <p>10 de Enero del 2025</p>
+                                            <p>{student?.createdAt.toString()}</p>
                                         </span>
                                     </div>
                                     <div className="flex flex-col">
-                                        <p className="font-medium">Ultimo acceso:</p>
+                                        <p className="font-medium">Teléfono:</p>
                                         <span className="flex items-center gap-2">
-                                            <p>Hoy a las 8:40am</p>
+                                            <p>{student?.phone_number}</p>
                                         </span>
                                     </div>
                                 </div>
@@ -98,7 +178,7 @@ function SettingsStudents() {
                                 <CardDescription>Actualiza tu contraseña para mantener tu cuenta segura.</CardDescription>
                             </CardHeader>
                             <CardContent>
-                                <form onSubmit={handleSubmit}>
+                                <form onSubmit={handleSubmitPassword}>
                                     <div className="grid items-start grid-cols-1 md:grid-cols-[1fr] gap-4 w-full">
                                         <div className="flex flex-col gap-2">
                                             <Label htmlFor="current-pass" className="text-md">
@@ -161,6 +241,7 @@ function SettingsStudents() {
                     </CardContent>
                     <CardFooter>
                         <Button 
+                            onClick={deleteAccount}
                             className="w-full border border-red-400 bg-transparent text-red-400
                             hover:bg-red-50 hover:text-black hover:cursor-pointer">
                             Eliminar cuenta

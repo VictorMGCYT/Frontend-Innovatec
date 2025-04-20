@@ -11,7 +11,7 @@ import {
     SidebarMenuItem,
   } from "@/components/ui/sidebar"
 import { FileText, LayoutDashboard, LogOut, Settings, User, UserCog } from "lucide-react"
-import { Link } from "react-router"
+import { Link, useNavigate } from "react-router"
 
 // Menu items.
 const items = [
@@ -26,15 +26,15 @@ const items = [
       icon: UserCog,
     },
     {
-      title: "Mi CV",
-      url: "#",
+      title: "Mi Foto y CV",
+      url: "/dashboard-student/documents",
       icon: FileText,
     },
-    {
-      title: "Dashboard",
-      url: "#",
-      icon: LayoutDashboard,
-    },
+    // {
+    //   title: "Dashboard",
+    //   url: "#",
+    //   icon: LayoutDashboard,
+    // },
     {
       title: "Configuración",
       url: "/dashboard-student/settings",
@@ -44,6 +44,15 @@ const items = [
    
 
 export function AppSidebar() {
+  const navigate = useNavigate();
+
+  function handleLogout(e: React.MouseEvent<HTMLAnchorElement>) {
+    e.preventDefault()
+    sessionStorage.removeItem("token")
+    navigate("/Login")
+
+  }
+
 return (
     <>
         <Sidebar variant="sidebar" collapsible="offcanvas">
@@ -75,7 +84,7 @@ return (
                 <SidebarMenu>
                     <SidebarMenuItem>
                         <SidebarMenuButton asChild className="text-red-500 hover:text-red-600">
-                            <a href="#Cerrar">
+                            <a className="hover:cursor-pointer" onClick={ e => {handleLogout(e)}}>
                                 <LogOut />
                                 Cerrar Sesión
                             </a>

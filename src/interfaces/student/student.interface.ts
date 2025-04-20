@@ -23,6 +23,8 @@ interface StudentInterface {
 
     user: any;
 
+    createdAt: Date;
+
     deletedAt: Date; 
 }
 

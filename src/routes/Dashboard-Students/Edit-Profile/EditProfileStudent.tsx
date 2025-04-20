@@ -10,7 +10,7 @@ import { CARRERAS } from "@/utils/global-variables/careers";
 import validatePersonalInfo from "@/utils/validations/validate-personal-info";
 import { Loader2, Save } from "lucide-react";
 import React, { useEffect, useState } from "react";
-import { updateStudentPersonalInfo } from "./editProfile.api";
+import { handleErrors, updateStudentLanguages, updateStudentPersonalInfo, updateStudentSkills } from "./editProfile.api";
 import { toast } from "sonner";
 import WorkInProgressCard from "@/components/personal-components/WorkInProgress";
 import { Checkbox } from "@/components/ui/checkbox";
@@ -38,6 +38,7 @@ function EditProfileStudent() {
     const [languages, setLanguages] = useState<string[]>([]);
 
     useEffect(() => {
+        console.log(student);
         if(student){
             // Se pasan los datos del hook al estado
             setPersonalDataForm({
@@ -48,6 +49,10 @@ function EditProfileStudent() {
                 phone: student?.phone_number || "",
                 career: student?.career || ""
             })
+
+            if(student.skills) setSkills(student?.skills);
+            if(student.languages) setLanguages(student?.languages)
+            
             setLoadingContent(false);
         }
     }, [student])
@@ -67,30 +72,48 @@ function EditProfileStudent() {
             })
 
         } catch (error: any) {
-            if (error.response) {
-                // El servidor respondió con un código de error (400, 404, etc.)
-                if (error.response.status === 400) {
-                    toast.error("Datos inválidos", {
-                        description: "Verifica los campos ingresados.",
-                    });
-                } else {
-                    toast.error("Error del servidor", {
-                        description: `Error ${error.response.status}: ${error.response.data?.message || 'Algo salió mal'}`,
-                    });
-                }
-            } else if (error.request) {
-                // La petición se hizo pero no hubo respuesta (sin conexión o el servidor no responde)
-                toast.error("Sin conexión", {
-                    description: "No se pudo conectar con el servidor. Revisa tu conexión a internet.",
-                });
-            } 
+            handleErrors(error)
         } finally {
             setLoading(false)
         }
     }
 
-    async function addSkill(e: any) {
+    async function addSkill(e: React.FormEvent<HTMLFormElement>) {
+        e.preventDefault();
+        try {
+            setLoading(true);
+            const studentId = student?.id;
 
+            await updateStudentSkills(studentId, skills);
+            
+            toast.message("Habilidades actualizadas", {
+                description: "Los datos se han actualizado exitosamente",
+            })
+
+        } catch (error: any) {
+            handleErrors(error)
+        } finally {
+            setLoading(false);
+        }
+    }
+
+    async function addLanguages(e: React.FormEvent<HTMLFormElement>) {
+        e.preventDefault();
+        try {
+            setLoading(true);
+            const studentId = student?.id;
+
+            await updateStudentLanguages(studentId, languages);
+            
+            toast.message("Idiomas actualizados", {
+                description: "Los datos se han actualizado exitosamente",
+            })
+
+        } catch (error: any) {
+            handleErrors(error)
+        } finally {
+            setLoading(false);
+        }
     }
 
     return (
@@ -275,7 +298,9 @@ function EditProfileStudent() {
                                 </CardDescription>
                             </CardHeader>
                             <CardContent>
-                                <form className="grid grid-cols-2 md:grid-cols-3 gap-4">
+                                <form 
+                                    onSubmit={ e => addSkill(e)}
+                                    className="grid grid-cols-2 md:grid-cols-3 gap-4">
                                     {
                                         SKILLS.map((skill) => {
                                             return (
@@ -304,9 +329,11 @@ function EditProfileStudent() {
                                         })
                                     }
                                     <Button 
+                                        disabled={loading}
+                                        type="submit"
                                         className="col-span-2 md:col-span-3 bg-amber-500 hover:bg-amber-600
                                         hover:cursor-pointer">
-                                        Guardar Habilidades
+                                        {loading ? "Guardando..." : "Guardar Habilidades"}
                                     </Button>
                                 </form>
                             </CardContent>
@@ -321,7 +348,9 @@ function EditProfileStudent() {
                                 </CardDescription>
                             </CardHeader>
                             <CardContent>
-                            <form className="grid grid-cols-2 md:grid-cols-3 gap-4">
+                            <form 
+                                onSubmit={e => addLanguages(e)}
+                                className="grid grid-cols-2 md:grid-cols-3 gap-4">
                                     {
                                         LANGUAGES.map((language) => {
                                             return (
@@ -350,9 +379,11 @@ function EditProfileStudent() {
                                         })
                                     }
                                     <Button 
+                                        type="submit"
+                                        disabled={loading}
                                         className="col-span-2 md:col-span-3 bg-amber-500 hover:bg-amber-600
                                         hover:cursor-pointer">
-                                        Guardar Idiomas
+                                        {loading ? "Guardando..." : "Guardar Idiomas"}
                                     </Button>
                                 </form>
                             </CardContent>
