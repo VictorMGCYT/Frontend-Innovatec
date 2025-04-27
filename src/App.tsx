@@ -11,6 +11,8 @@ import { useTheme } from "./hooks/useTheme";
 import SettingsStudents from "./routes/Dashboard-Students/Settings/SettingsStudent";
 import DocumentsStudents from "./routes/Dashboard-Students/CV/CV";
 import Layout from "./LayoutStudents";
+import LayoutCompany from "./LayoutCompanies";
+import MainCompany from "./routes/Dashboard-Companies/Main/MainCompany";
 
 
 
@@ -36,6 +38,16 @@ function App() {
         <Route path="dashboard-student/edit-profile" element={<ProtectRoutes role="student"><EditProfileStudent/></ProtectRoutes>}></Route>
         <Route path="dashboard-student/settings" element={<ProtectRoutes role="student"><SettingsStudents/></ProtectRoutes>}></Route>
         <Route path="dashboard-student/documents" element={<ProtectRoutes role="student"><DocumentsStudents/></ProtectRoutes>}></Route>
+      </Route>
+
+      {/* Rutas con layout de empresas */}
+      <Route path="/" element={<LayoutCompany/>} >
+        <Route path="dashboard-company" element={<MainCompany/>} />
+        <Route path="dashboard-company/profile" element={<div>Perfil de la empresa</div>} />
+        <Route path="dashboard-company/edit-profile" element={<div>Editar Perfil</div>} />
+        <Route path="dashboard-company/students-catalog" element={<div>Catalogo de estudiantes</div>} />
+        <Route path="dashboard-company/jobs" element={<div>Ofertas de empleo</div>} />
+        <Route path="dashboard-company/settings" element={<div>Configuraciones</div>} />
       </Route>
 
       {/* Rutas sin Layout */}

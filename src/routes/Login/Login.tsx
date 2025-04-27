@@ -43,7 +43,7 @@ function Login() {
       if (userRole === "student") {
         navigate('/dashboard-student/profile');
       } else if (userRole === "company") {
-        navigate('/dashboard-company/profile');
+        navigate('/dashboard-company/');
       } else {
         navigate('/home'); // Ruta por defecto en caso de error
       }
