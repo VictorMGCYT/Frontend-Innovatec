@@ -10,7 +10,7 @@ import {
     SidebarMenuButton,
     SidebarMenuItem,
   } from "@/components/ui/sidebar"
-import { FileText, LayoutDashboard, LogOut, Settings, User, UserCog } from "lucide-react"
+import { FileText, LogOut, Settings, User, UserCog } from "lucide-react"
 import { Link, useNavigate } from "react-router"
 
 // Menu items.

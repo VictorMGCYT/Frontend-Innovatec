@@ -2,6 +2,8 @@ import WorkInProgressCard from "@/components/personal-components/WorkInProgress"
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { useStudent } from "@/hooks/useStudent";
+import axios from "axios";
 import { FileText, Trash2 } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { toast } from "sonner";
@@ -10,9 +12,11 @@ import { toast } from "sonner";
 const API_URL = import.meta.env.VITE_API_REST_INNOVATEC ?? "http://localhost:3001/api/";
 
 function DocumentsStudents() {
+    const student = useStudent();
     const [cvFile, setCvFile] = useState<File | null>(null)
     const [cvError, setCvError] = useState<string | null>(null)
     const [cvPreviewUrl, setCvPreviewUrl] = useState<string | null>(null)
+    const [loading, setLoading] = useState(false);
 
     // Referencias para los inputs de archivo
     const cvInputRef = useRef<HTMLInputElement>(null)
@@ -57,6 +61,42 @@ function DocumentsStudents() {
         }
     }, [cvError])
     
+
+    // Manejo de subida del CV al servidor
+    async function uploadCv(){
+        if(!cvFile){
+            toast.error("Error", {
+                description: "No hay archivo para subir, por favor selecciona uno"
+            })
+            return
+        }
+
+        const formData = new FormData();
+        formData.append("file", cvFile);
+
+        try {
+
+            const studentId = student?.id;
+
+            setLoading(true);
+            await axios.patch(`${API_URL}students/upload-cv/${studentId}`, formData, {
+                headers: {
+                    'Content-Type': 'multipart/form-data',
+                }
+            })
+
+            toast.success("CV subido", {
+                description: "Tu CV ha sido subido correctamente"
+            })
+        } catch (error) {
+            toast.error("Error al subir el CV", {
+                description: `Por favor, intenta de nuevo más tarde.`
+            });
+        } finally{
+            setLoading(false);
+        }
+    }
+
     return (
         <>
             <div className="grid items-center p-6 grid-cols-1 md:grid-cols-[2fr_1fr] gap-4  w-full">
@@ -129,8 +169,10 @@ function DocumentsStudents() {
                                     </div>
                                 }
                                 <Button className="mt-4 bg-amber-500 hover:bg-amber-600
-                                    hover:cursor-pointer">
-                                    Subir archivo
+                                    hover:cursor-pointer"
+                                    onClick={uploadCv}
+                                    disabled={loading}>
+                                    { loading ? "Subiendo..." : "Subir archivo"}
                                 </Button>
                             </CardContent>
                         </Card>
