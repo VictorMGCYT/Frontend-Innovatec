@@ -74,11 +74,11 @@ function LayoutCompany() {
               <Avatar>
                   <AvatarImage></AvatarImage>
                   <AvatarFallback className='bg-amber-100 p-2 rounded-full dark:text-black'>
-                      {`EN`}
+                      {`YO`}
                   </AvatarFallback>
               </Avatar>
               <h3 className='font-medium'>
-                  {"Nombre de la empresa"}
+                  {"YesOwl"}
               </h3>
           </div>
         </SidebarProvider>

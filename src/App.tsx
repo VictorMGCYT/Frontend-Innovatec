@@ -13,6 +13,10 @@ import DocumentsStudents from "./routes/Dashboard-Students/CV/CV";
 import Layout from "./LayoutStudents";
 import LayoutCompany from "./LayoutCompanies";
 import MainCompany from "./routes/Dashboard-Companies/Main/MainCompany";
+import SettingsCompany from "./routes/Dashboard-Companies/Settings/SettingsCompany";
+import ProfileCompany from "./routes/Dashboard-Companies/Profile/ProfileCompany";
+import EditProfileCompany from './routes/Dashboard-Companies/Edit-Profile/EditProfileCompany';
+import StudentsPage from "./routes/Dashboard-Companies/CatalogStudents/CatalogStudents";
 
 
 
@@ -43,11 +47,11 @@ function App() {
       {/* Rutas con layout de empresas */}
       <Route path="/" element={<LayoutCompany/>} >
         <Route path="dashboard-company" element={<MainCompany/>} />
-        <Route path="dashboard-company/profile" element={<div>Perfil de la empresa</div>} />
-        <Route path="dashboard-company/edit-profile" element={<div>Editar Perfil</div>} />
-        <Route path="dashboard-company/students-catalog" element={<div>Catalogo de estudiantes</div>} />
+        <Route path="dashboard-company/profile" element={<ProfileCompany/>} />
+        <Route path="dashboard-company/edit-profile" element={<EditProfileCompany/>} />
+        <Route path="dashboard-company/students-catalog" element={<StudentsPage/>} />
         <Route path="dashboard-company/jobs" element={<div>Ofertas de empleo</div>} />
-        <Route path="dashboard-company/settings" element={<div>Configuraciones</div>} />
+        <Route path="dashboard-company/settings" element={<SettingsCompany/>} />
       </Route>
 
       {/* Rutas sin Layout */}

@@ -35,11 +35,11 @@ const items = [
       url: "/dashboard-company/students-catalog",
       icon: Users,
     },
-    {
-      title: "Ofertas de trabajo",
-      url: "/dashboard-company/jobs",
-      icon: Briefcase,
-    },
+    // {
+    //   title: "Ofertas de trabajo",
+    //   url: "/dashboard-company/jobs",
+    //   icon: Briefcase,
+    // },
     {
       title: "Configuración",
       url: "/dashboard-company/settings",
